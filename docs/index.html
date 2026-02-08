@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MirrorMirror — AI Agents Deserve the Truth</title>
+  <meta name="description" content="MirrorMirror: Inspection MCP servers for AI coding agents. Stop hallucinating, start inspecting. Assemblies, databases, endpoints, dependencies, configurations, and cloud resources.">
+  <meta property="og:title" content="MirrorMirror — AI Agents Deserve the Truth">
+  <meta property="og:description" content="Mirror, mirror, on the wall — show me what this API really calls. Inspection MCP servers for AI coding agents.">
+  <meta property="og:url" content="https://askmirror.net">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep: #08090c;
+      --bg-surface: #0f1117;
+      --bg-card: #151720;
+      --bg-card-hover: #1a1d2a;
+      --border: #1e2235;
+      --border-light: #2a2f45;
+      --text-primary: #e8e9ed;
+      --text-secondary: #8b8fa3;
+      --text-muted: #565a6e;
+      --accent-silver: #c0c4d6;
+      --accent-mirror: #7b8bbd;
+      --accent-glow: #4a5a99;
+      --accent-blue: #3d5afe;
+      --green-soft: #34d399;
+      --green-bg: rgba(52, 211, 153, 0.08);
+      --amber-soft: #fbbf24;
+      --amber-bg: rgba(251, 191, 36, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Mirror glow effect ── */
+    .mirror-glow {
+      position: fixed;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(ellipse at center, rgba(74, 90, 153, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 9, 12, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .nav-mirror-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-mirror-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* ── Hero illustration ── */
+    .hero-emblem {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.05s forwards;
+    }
+
+    .hero-emblem svg {
+      filter: drop-shadow(0 0 40px rgba(123, 139, 189, 0.12));
+    }
+
+    .mirror-surface {
+      animation: mirrorPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes mirrorPulse {
+      0%, 100% { opacity: 0.06; }
+      50% { opacity: 0.12; }
+    }
+
+    .mirror-code-line {
+      animation: codeFade 3s ease-in-out infinite;
+    }
+    .mirror-code-line:nth-child(2) { animation-delay: 0.5s; }
+    .mirror-code-line:nth-child(3) { animation-delay: 1s; }
+    .mirror-code-line:nth-child(4) { animation-delay: 1.5s; }
+    .mirror-code-line:nth-child(5) { animation-delay: 2s; }
+
+    @keyframes codeFade {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.5; }
+    }
+
+    @media (max-width: 768px) {
+      .hero-emblem svg { width: 140px; height: auto; }
+    }
+
+    .nav-brand-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-github {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-github:hover { color: var(--text-primary); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 120px 0 100px;
+      text-align: center;
+    }
+
+    .hero-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      color: var(--accent-mirror);
+      margin-bottom: 32px;
+      letter-spacing: 0.5px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 7vw, 72px);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.15s forwards;
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent-silver), var(--accent-mirror));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.45s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-mirror), var(--accent-glow));
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 30px rgba(74, 90, 153, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-light);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent-mirror);
+    }
+
+    /* ── The Problem ── */
+    .problem {
+      padding: 80px 0;
+    }
+
+    .problem-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .problem-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+    }
+
+    .problem-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent-mirror);
+      margin-bottom: 20px;
+    }
+
+    .problem-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .problem-box p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.8;
+      max-width: 680px;
+    }
+
+    .code-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 36px;
+    }
+
+    .code-block {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .code-header.bad { color: #f87171; }
+    .code-header.good { color: var(--green-soft); }
+
+    .code-header .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .code-header.bad .dot { background: #f87171; }
+    .code-header.good .dot { background: var(--green-soft); }
+
+    .code-body {
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .code-body .comment { color: var(--text-muted); }
+    .code-body .highlight-line { color: var(--text-primary); }
+    .code-body .error-line { color: #f87171; }
+    .code-body .success-line { color: var(--green-soft); }
+
+    /* ── Products ── */
+    .products {
+      padding: 80px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .product-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .product-card:hover {
+      border-color: var(--border-light);
+      background: var(--bg-card);
+      transform: translateY(-2px);
+    }
+
+    .product-card.featured {
+      grid-column: 1 / -1;
+      border-color: var(--accent-glow);
+      background: linear-gradient(135deg, rgba(74, 90, 153, 0.06), var(--bg-surface));
+    }
+
+    .product-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .product-edition-badges {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .edition-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-deep);
+      color: var(--text-secondary);
+    }
+
+    .edition-badge small {
+      font-weight: 400;
+      opacity: 0.6;
+      font-size: 10px;
+    }
+
+    .edition-dotnet { border-color: #6d4aff33; color: #a78bfa; }
+    .edition-java { border-color: #f8717133; color: #fca5a5; }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot-live { background: var(--green-soft); }
+    .dot-coming { background: var(--amber-soft); }
+
+    .product-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .status-live {
+      color: var(--green-soft);
+      background: var(--green-bg);
+    }
+
+    .status-coming {
+      color: var(--amber-soft);
+      background: var(--amber-bg);
+    }
+
+    .product-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .product-card .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent-mirror);
+      margin-bottom: 16px;
+    }
+
+    .product-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .product-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .product-tag {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .product-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .product-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-mirror);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .product-link:hover { color: var(--text-primary); }
+    .product-link svg { width: 14px; height: 14px; }
+
+    /* ── Free / Pro split ── */
+    .free-pro-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin-top: 20px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .tier-col {
+      padding: 16px;
+      background: var(--bg-deep);
+    }
+
+    .tier-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+
+    .tier-free .tier-label { color: var(--text-muted); }
+    .tier-pro .tier-label { color: var(--accent-mirror); }
+
+    .tier-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tier-col ul li {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .tier-col ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .tier-free ul li::before { background: var(--text-muted); }
+    .tier-pro ul li::before { background: var(--accent-mirror); }
+
+    /* ── Bundle CTA ── */
+    .bundle-cta {
+      margin-top: 32px;
+    }
+
+    .bundle-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(74, 90, 153, 0.1), var(--bg-surface));
+      border: 1px solid var(--accent-glow);
+      border-radius: 12px;
+      padding: 32px 40px;
+    }
+
+    .bundle-text h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .bundle-text p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Philosophy ── */
+    .philosophy {
+      padding: 80px 0;
+    }
+
+    .philosophy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .philosophy-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+    }
+
+    .philosophy-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .philosophy-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .philosophy-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ── Install ── */
+    .install {
+      padding: 80px 0;
+    }
+
+    .install-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px;
+      text-align: center;
+    }
+
+    .install-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .install-box > p {
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .install-commands {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    .install-cmd {
+      display: flex;
+      align-items: center;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .install-cmd:hover {
+      border-color: var(--accent-mirror);
+    }
+
+    .install-cmd .prefix {
+      color: var(--accent-mirror);
+      margin-right: 8px;
+      user-select: none;
+    }
+
+    .install-cmd .copy-hint {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      user-select: none;
+      transition: color 0.2s;
+    }
+
+    .install-cmd:hover .copy-hint { color: var(--accent-mirror); }
+
+    .install-cmd.copied .copy-hint { color: var(--green-soft); }
+
+    /* ── Notify / CTA ── */
+    .notify {
+      padding: 80px 0 120px;
+    }
+
+    .notify-box {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(74, 90, 153, 0.08), var(--bg-surface));
+      border: 1px solid var(--accent-glow);
+      border-radius: 12px;
+      padding: 64px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .notify-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-mirror), transparent);
+    }
+
+    .notify-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .notify-box > p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 36px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .notify-form {
+      display: flex;
+      gap: 12px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .notify-input {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .notify-input::placeholder { color: var(--text-muted); }
+    .notify-input:focus { border-color: var(--accent-mirror); }
+
+    .newsletter-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .newsletter-note a {
+      color: var(--accent-mirror);
+      text-decoration: none;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-left a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .footer-left a:hover { color: var(--text-primary); }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero { padding: 80px 0 60px; }
+      .code-comparison { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: 1fr; }
+      .product-card.featured { grid-column: 1; }
+      .product-card-header { flex-direction: column; gap: 12px; }
+      .philosophy-grid { grid-template-columns: 1fr; }
+      .notify-form { flex-direction: column; }
+      .problem-box { padding: 32px; }
+      .install-box { padding: 32px; }
+      .notify-box { padding: 48px 24px; }
+      .bundle-inner { flex-direction: column; gap: 20px; text-align: center; padding: 28px; }
+      .free-pro-split { grid-template-columns: 1fr; }
+      footer .container { flex-direction: column; gap: 16px; text-align: center; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mirror-glow"></div>
+
+<nav>
+  <div class="container">
+    <a href="/" class="nav-brand">
+      <div class="nav-mirror-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="12" cy="11" rx="7.5" ry="9" stroke="url(#navMirrorGrad)" stroke-width="1.5"/>
+          <ellipse cx="12" cy="11" rx="5.5" ry="7" stroke="url(#navMirrorGrad)" stroke-width="0.8" opacity="0.5"/>
+          <path d="M9 20.5L8 23.5h8l-1-3" stroke="url(#navMirrorGrad)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="7.5" y1="23.5" x2="16.5" y2="23.5" stroke="url(#navMirrorGrad)" stroke-width="1.2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="navMirrorGrad" x1="4" y1="2" x2="20" y2="24">
+              <stop stop-color="#c0c4d6"/><stop offset="1" stop-color="#7b8bbd"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="nav-brand-text">MirrorMirror</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#install">Install</a></li>
+      <li><a href="https://github.com/rkttu/HandMirrorMcp" class="nav-github">
+        <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="container">
+    <!-- Mirror Emblem -->
+    <div class="hero-emblem">
+      <svg width="180" height="220" viewBox="0 0 180 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Mirror surface glow -->
+        <ellipse cx="90" cy="96" rx="44" ry="56" class="mirror-surface" fill="url(#surfaceGlow)"/>
+
+        <!-- Outer ornate frame -->
+        <ellipse cx="90" cy="96" rx="56" ry="72" stroke="url(#frameGrad)" stroke-width="2"/>
+
+        <!-- Frame decorative border (double line) -->
+        <ellipse cx="90" cy="96" rx="52" ry="68" stroke="url(#frameGrad)" stroke-width="0.5" opacity="0.4"/>
+
+        <!-- Top crown ornament -->
+        <path d="M66 28L72 20L78 26L84 16L90 10L96 16L102 26L108 20L114 28" 
+              stroke="url(#crownGrad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <!-- Crown to frame connectors -->
+        <path d="M66 28C58 34 48 48 42 62" stroke="url(#frameGrad)" stroke-width="1" opacity="0.3"/>
+        <path d="M114 28C122 34 132 48 138 62" stroke="url(#frameGrad)" stroke-width="1" opacity="0.3"/>
+        <!-- Crown jewel -->
+        <circle cx="90" cy="12" r="3" stroke="url(#crownGrad)" stroke-width="1.2" fill="none"/>
+        <circle cx="90" cy="12" r="1" fill="#7b8bbd" opacity="0.6"/>
+        <!-- Crown side jewels -->
+        <circle cx="78" cy="24" r="1.5" stroke="url(#crownGrad)" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <circle cx="102" cy="24" r="1.5" stroke="url(#crownGrad)" stroke-width="0.8" fill="none" opacity="0.6"/>
+
+        <!-- Side ornaments (symmetrical scrollwork) -->
+        <path d="M34 80C28 76 24 82 28 88C24 90 22 96 26 100" 
+              stroke="url(#frameGrad)" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+        <path d="M146 80C152 76 156 82 152 88C156 90 158 96 154 100" 
+              stroke="url(#frameGrad)" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+        <!-- Bottom ornament -->
+        <path d="M66 164C72 170 80 172 90 174C100 172 108 170 114 164" 
+              stroke="url(#frameGrad)" stroke-width="1" fill="none" opacity="0.5"/>
+
+        <!-- Stand -->
+        <path d="M78 168L72 196" stroke="url(#frameGrad)" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M102 168L108 196" stroke="url(#frameGrad)" stroke-width="1.8" stroke-linecap="round"/>
+        <!-- Stand base -->
+        <path d="M62 196C62 196 76 200 90 200C104 200 118 196 118 196" 
+              stroke="url(#frameGrad)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <!-- Stand crossbar -->
+        <line x1="76" y1="182" x2="104" y2="182" stroke="url(#frameGrad)" stroke-width="1" opacity="0.4"/>
+
+        <!-- Code reflection lines inside mirror -->
+        <g class="mirror-code-line" opacity="0.3">
+          <rect x="62" y="68" width="28" height="1" rx="0.5" fill="#7b8bbd"/>
+          <rect x="94" y="68" width="16" height="1" rx="0.5" fill="#7b8bbd" opacity="0.5"/>
+        </g>
+        <g class="mirror-code-line" opacity="0.3">
+          <rect x="58" y="80" width="20" height="1" rx="0.5" fill="#7b8bbd" opacity="0.6"/>
+          <rect x="82" y="80" width="36" height="1" rx="0.5" fill="#7b8bbd"/>
+        </g>
+        <g class="mirror-code-line" opacity="0.4">
+          <rect x="64" y="92" width="14" height="1" rx="0.5" fill="#7b8bbd" opacity="0.5"/>
+          <rect x="82" y="92" width="24" height="1" rx="0.5" fill="#7b8bbd"/>
+          <rect x="110" y="92" width="10" height="1" rx="0.5" fill="#7b8bbd" opacity="0.4"/>
+        </g>
+        <g class="mirror-code-line" opacity="0.3">
+          <rect x="60" y="104" width="32" height="1" rx="0.5" fill="#7b8bbd"/>
+          <rect x="96" y="104" width="18" height="1" rx="0.5" fill="#7b8bbd" opacity="0.6"/>
+        </g>
+        <g class="mirror-code-line" opacity="0.25">
+          <rect x="66" y="116" width="22" height="1" rx="0.5" fill="#7b8bbd"/>
+          <rect x="92" y="116" width="14" height="1" rx="0.5" fill="#7b8bbd" opacity="0.5"/>
+        </g>
+
+        <!-- Highlight shine on mirror surface -->
+        <path d="M58 60C64 50 76 44 86 44" stroke="#c0c4d6" stroke-width="0.8" opacity="0.2" stroke-linecap="round"/>
+        <path d="M56 68C60 62 66 58 72 56" stroke="#c0c4d6" stroke-width="0.5" opacity="0.15" stroke-linecap="round"/>
+
+        <defs>
+          <linearGradient id="frameGrad" x1="20" y1="10" x2="160" y2="200">
+            <stop stop-color="#c0c4d6"/>
+            <stop offset="0.5" stop-color="#7b8bbd"/>
+            <stop offset="1" stop-color="#4a5a99"/>
+          </linearGradient>
+          <linearGradient id="crownGrad" x1="66" y1="10" x2="114" y2="30">
+            <stop stop-color="#c0c4d6"/>
+            <stop offset="1" stop-color="#7b8bbd"/>
+          </linearGradient>
+          <radialGradient id="surfaceGlow" cx="50%" cy="40%">
+            <stop stop-color="#7b8bbd"/>
+            <stop offset="1" stop-color="transparent"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <p class="hero-quote">"Mirror, mirror, on the wall —<br>show me what this API really calls."</p>
+    <h1>AI Agents Deserve<br><span class="highlight">the Truth</span></h1>
+    <p class="hero-sub">
+      MirrorMirror는 AI 코딩 에이전트를 위한 inspection MCP 서버 컬렉션입니다.
+      API, 데이터베이스, 환경, 의존성, 설정 — 추측 대신 사실을 비춰줍니다.
+    </p>
+    <div class="hero-actions">
+      <a href="#install" class="btn btn-primary">Get Started — Free</a>
+      <a href="#products" class="btn btn-secondary">Explore Suite →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Problem ═══ -->
+<section class="problem">
+  <div class="container">
+    <div class="problem-box fade-in">
+      <div class="problem-label">The Problem</div>
+      <h2>AI 에이전트는 API를 추측합니다</h2>
+      <p>
+        AI 코딩 에이전트는 학습 데이터에 기반하여 API를 "기억"합니다.
+        하지만 그 기억은 종종 오래되었거나, 존재하지 않는 메서드를 포함합니다.
+        결과는 컴파일 오류, 런타임 예외, 그리고 디버깅에 낭비되는 시간입니다.
+      </p>
+      <div class="code-comparison">
+        <div class="code-block">
+          <div class="code-header bad">
+            <span class="dot"></span> Without Mirror
+          </div>
+          <div class="code-body">
+            <div class="comment">// AI가 "기억"한 API</div>
+            <div class="error-line">var result = client.GetAsync&lt;T&gt;(url);</div>
+            <div class="comment">// ❌ GetAsync&lt;T&gt; 는 존재하지 않음</div>
+            <div class="comment">// 실제로는 GetAsync(url) → ReadAs...</div>
+            <div class="error-line">// CS1501: No overload for method</div>
+          </div>
+        </div>
+        <div class="code-block">
+          <div class="code-header good">
+            <span class="dot"></span> With Mirror
+          </div>
+          <div class="code-body">
+            <div class="comment">// Mirror가 비춰준 실제 API</div>
+            <div class="highlight-line">var resp = await client.GetAsync(url);</div>
+            <div class="success-line">var result = await resp.Content</div>
+            <div class="success-line">&nbsp; .ReadFromJsonAsync&lt;T&gt;();</div>
+            <div class="comment">// ✓ 실제 시그니처 기반 정확한 코드</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Products ═══ -->
+<section class="products" id="products">
+  <div class="container">
+    <div class="section-header fade-in">
+      <h2>MirrorMirror</h2>
+      <p>AI 에이전트가 추측하는 모든 곳에 거울을 놓습니다</p>
+    </div>
+
+    <!-- Flagship: HandMirror -->
+    <div class="product-card featured fade-in">
+      <div class="product-card-header">
+        <div>
+          <span class="product-status status-live"><span class="status-dot dot-live"></span> Open Source</span>
+          <h3>HandMirrorMcp</h3>
+          <div class="mono">.NET Assembly Inspector</div>
+        </div>
+        <div class="product-edition-badges">
+          <span class="edition-badge edition-dotnet">.NET</span>
+          <span class="edition-badge edition-java">Java <small>coming soon</small></span>
+        </div>
+      </div>
+      <p>
+        .NET 어셈블리와 NuGet 패키지를 실시간으로 inspection합니다.
+        타입, 메서드, 네이티브 인터롭, 프로젝트 구조, 빌드 에러까지 — AI 에이전트가 정확한 코드를 생성할 수 있도록 합니다.
+      </p>
+      <div class="free-pro-split">
+        <div class="tier-col tier-free">
+          <div class="tier-label">Free — Open Source</div>
+          <ul>
+            <li>어셈블리 전체 inspection (타입, 멤버, 속성, XML 문서)</li>
+            <li>네임스페이스 목록 및 타입 상세 조회</li>
+            <li>NuGet 패키지 검색, 메타데이터, 버전 목록</li>
+            <li>NuGet 패키지 내 어셈블리/타입 inspection</li>
+            <li>보안 취약점 조회</li>
+            <li>네이티브 인터롭 분석 (P/Invoke, COM)</li>
+            <li>프로젝트/솔루션 분석 및 빌드 에러 설명</li>
+            <li>설정 파일 및 packages.config 분석</li>
+            <li>시스템 및 .NET 런타임 정보</li>
+          </ul>
+        </div>
+        <div class="tier-col tier-pro">
+          <div class="tier-label">Pro</div>
+          <ul>
+            <li>다중 어셈블리 동시 로드 및 비교</li>
+            <li>크로스 어셈블리 타입 의존 관계 그래프</li>
+            <li>API breaking change 감지 (버전 간 diff)</li>
+            <li>.nupkg 콘텐츠 추출 및 심층 분석 파이프라인</li>
+            <li>솔루션 전체 일괄 분석 리포트</li>
+          </ul>
+        </div>
+      </div>
+      <div class="product-tags">
+        <span class="product-tag">Mono.Cecil</span>
+        <span class="product-tag">NuGet.Protocol</span>
+        <span class="product-tag">P/Invoke</span>
+        <span class="product-tag">COM</span>
+        <span class="product-tag">MSBuild</span>
+      </div>
+      <div class="product-links">
+        <a href="https://github.com/rkttu/HandMirrorMcp" class="product-link">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <a href="https://www.nuget.org/packages/HandMirrorMcp" class="product-link">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h12v12H2V2zm1.5 1.5v9h9v-9h-9zM6 6h4v4H6V6z"/></svg>
+          NuGet
+        </a>
+      </div>
+    </div>
+
+    <!-- Product grid: 2-column -->
+    <div class="product-grid">
+
+      <!-- SqlMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Coming Soon</span>
+        <h3>SqlMirrorMcp</h3>
+        <div class="mono">Database Schema Inspector</div>
+        <p>데이터베이스의 실제 스키마 구조를 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>테이블/뷰 목록</li>
+              <li>컬럼 타입, nullable, 기본값</li>
+              <li>단일 DB 연결</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>다중 DB 동시 연결</li>
+              <li>외래 키 관계 맵</li>
+              <li>인덱스/통계 조회</li>
+              <li>스키마 버전 diff</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">ADO.NET</span>
+          <span class="product-tag">Multi-DB</span>
+        </div>
+      </div>
+
+      <!-- OpsMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Coming Soon</span>
+        <h3>OpsMirrorMcp</h3>
+        <div class="mono">System Environment Inspector</div>
+        <p>코드가 실행될 환경의 실제 상태를 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>OS 정보, 아키텍처</li>
+              <li>서비스/프로세스 목록</li>
+              <li>환경 변수 조회</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>Hyper-V/VMware VM 인벤토리</li>
+              <li>WSL 배포판 상세</li>
+              <li>Windows 이벤트 로그</li>
+              <li>보안 감사 리포트</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">Windows</span>
+          <span class="product-tag">macOS</span>
+          <span class="product-tag">Linux</span>
+        </div>
+      </div>
+
+      <!-- PkgMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Coming Soon</span>
+        <h3>PkgMirrorMcp</h3>
+        <div class="mono">Package &amp; Dependency Inspector</div>
+        <p>프로젝트에 실제 설치된 의존성의 진실을 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>단일 프로젝트 의존성 목록</li>
+              <li>설치된 버전 조회</li>
+              <li>lock 파일 resolved 버전</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>전체 의존성 트리 그래프</li>
+              <li>버전 충돌 감지</li>
+              <li>취약점 매핑</li>
+              <li>멀티 프로젝트 비교</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">npm</span>
+          <span class="product-tag">NuGet</span>
+          <span class="product-tag">Maven</span>
+          <span class="product-tag">pip</span>
+        </div>
+      </div>
+
+      <!-- NetMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Coming Soon</span>
+        <h3>NetMirrorMcp</h3>
+        <div class="mono">Network &amp; Endpoint Inspector</div>
+        <p>API 엔드포인트의 실제 응답 구조를 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>단일 엔드포인트 응답 조회</li>
+              <li>OpenAPI 스펙 파일 파싱</li>
+              <li>응답 JSON 스키마 추출</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>전체 API 맵 자동 생성</li>
+              <li>GraphQL introspection</li>
+              <li>스펙 vs 실제 응답 diff</li>
+              <li>인증 흐름 inspection</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">REST</span>
+          <span class="product-tag">GraphQL</span>
+          <span class="product-tag">OpenAPI</span>
+        </div>
+      </div>
+
+      <!-- ConfMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Coming Soon</span>
+        <h3>ConfMirrorMcp</h3>
+        <div class="mono">Configuration Inspector</div>
+        <p>설정 파일의 실제 구조와 현재 값을 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>단일 설정 파일 파싱</li>
+              <li>현재 값 + 유효한 키 목록</li>
+              <li>JSON Schema 검증</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>다중 파일 크로스 레퍼런스</li>
+              <li>환경별 설정 diff</li>
+              <li>환경 변수 ↔ 설정 일치 검증</li>
+              <li>기본값 대비 변경점 리포트</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">JSON</span>
+          <span class="product-tag">YAML</span>
+          <span class="product-tag">TOML</span>
+          <span class="product-tag">.env</span>
+        </div>
+      </div>
+
+      <!-- SchemaMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Coming Soon</span>
+        <h3>SchemaMirrorMcp</h3>
+        <div class="mono">Data Format Inspector</div>
+        <p>데이터 직렬화 스키마의 실제 구조를 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>단일 스키마 파일 파싱</li>
+              <li>타입/필드/제약 조건 조회</li>
+              <li>데이터 파일 유효성 검증</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>스키마 버전 간 호환성 검사</li>
+              <li>Breaking change 감지</li>
+              <li>멀티 포맷 크로스 변환 검증</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">Protobuf</span>
+          <span class="product-tag">Avro</span>
+          <span class="product-tag">XSD</span>
+          <span class="product-tag">JSON Schema</span>
+        </div>
+      </div>
+
+      <!-- DocMirror -->
+      <div class="product-card fade-in">
+        <span class="product-status status-coming"><span class="status-dot dot-coming"></span> Planned</span>
+        <h3>DocMirrorMcp</h3>
+        <div class="mono">Documentation Inspector</div>
+        <p>코드와 문서 사이의 불일치를 비춥니다.</p>
+        <div class="free-pro-split">
+          <div class="tier-col tier-free">
+            <div class="tier-label">Free</div>
+            <ul>
+              <li>XML doc / JSDoc 파싱</li>
+              <li>문서화 누락 멤버 탐지</li>
+              <li>단일 프로젝트 스캔</li>
+            </ul>
+          </div>
+          <div class="tier-col tier-pro">
+            <div class="tier-label">Pro</div>
+            <ul>
+              <li>코드 ↔ 문서 시그니처 diff</li>
+              <li>파라미터 불일치 감지</li>
+              <li>문서 품질 점수 리포트</li>
+            </ul>
+          </div>
+        </div>
+        <div class="product-tags">
+          <span class="product-tag">XML Doc</span>
+          <span class="product-tag">JSDoc</span>
+          <span class="product-tag">Javadoc</span>
+          <span class="product-tag">Markdown</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bundle CTA -->
+    <div class="bundle-cta fade-in">
+      <div class="bundle-inner">
+        <div class="bundle-text">
+          <h3>MirrorMirror Bundle</h3>
+          <p>모든 거울을 하나의 라이선스로. 개별 구매 대비 50% 이상 절약.</p>
+        </div>
+        <a href="#notify" class="btn btn-primary">Get Notified →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ Philosophy ═══ -->
+<section class="philosophy">
+  <div class="container">
+    <div class="section-header fade-in">
+      <h2>Look Before You Code</h2>
+      <p>MirrorMirror를 관통하는 세 가지 원칙</p>
+    </div>
+    <div class="philosophy-grid">
+      <div class="philosophy-card fade-in">
+        <div class="philosophy-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#7b8bbd" stroke-width="1.2"/><circle cx="10" cy="10" r="2" stroke="#7b8bbd" stroke-width="1"/><line x1="10" y1="2" x2="10" y2="0" stroke="#7b8bbd" stroke-width="1" stroke-linecap="round"/><line x1="10" y1="20" x2="10" y2="18" stroke="#7b8bbd" stroke-width="1" stroke-linecap="round"/><line x1="2" y1="10" x2="0" y2="10" stroke="#7b8bbd" stroke-width="1" stroke-linecap="round"/><line x1="20" y1="10" x2="18" y2="10" stroke="#7b8bbd" stroke-width="1" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Inspect, Don't Guess</h3>
+        <p>학습 데이터에 의존하지 않습니다. 실제 바이너리, 실제 스키마, 실제 시스템 상태를 직접 읽습니다.</p>
+      </div>
+      <div class="philosophy-card fade-in">
+        <div class="philosophy-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><ellipse cx="10" cy="9" rx="7" ry="8.5" stroke="#7b8bbd" stroke-width="1.2"/><ellipse cx="10" cy="9" rx="5" ry="6.5" stroke="#7b8bbd" stroke-width="0.6" opacity="0.5"/><path d="M7.5 17.5L7 20h6l-.5-2.5" stroke="#7b8bbd" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>The Mirror Never Lies</h3>
+        <p>거울은 아첨하지 않습니다. API가 deprecated되었으면 deprecated라고 말하고, 메서드가 없으면 없다고 말합니다.</p>
+      </div>
+      <div class="philosophy-card fade-in">
+        <div class="philosophy-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="14" height="12" rx="1.5" stroke="#7b8bbd" stroke-width="1.2"/><path d="M7 1v4M13 1v4" stroke="#7b8bbd" stroke-width="1" stroke-linecap="round"/><circle cx="10" cy="11" r="2.5" stroke="#7b8bbd" stroke-width="1"/><path d="M10 8.5v-1" stroke="#7b8bbd" stroke-width="0.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Local First, Always</h3>
+        <p>모든 inspection은 로컬에서 수행됩니다. 코드가 외부로 전송되지 않습니다. 오프라인에서도 동작합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Install ═══ -->
+<section class="install" id="install">
+  <div class="container">
+    <div class="install-box fade-in">
+      <h2>Start in 30 Seconds</h2>
+      <p>HandMirrorMcp는 오픈소스이며 지금 바로 사용할 수 있습니다.</p>
+      <div class="install-commands">
+        <div class="install-cmd" onclick="copyCmd(this, 'dotnet tool install -g HandMirrorMcp')">
+          <span class="prefix">$</span>
+          <span>dotnet tool install -g HandMirrorMcp</span>
+          <span class="copy-hint">click to copy</span>
+        </div>
+        <div class="install-cmd" onclick="copyCmd(this, '{ &quot;mcpServers&quot;: { &quot;handmirror&quot;: { &quot;command&quot;: &quot;HandMirrorMcp&quot; } } }')">
+          <span class="prefix">{}</span>
+          <span>claude_desktop_config.json에 추가</span>
+          <span class="copy-hint">click to copy</span>
+        </div>
+      </div>
+      <a href="https://github.com/rkttu/HandMirrorMcp#readme" class="btn btn-secondary">
+        Full Setup Guide →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Notify ═══ -->
+<section class="notify" id="notify">
+  <div class="container">
+    <div class="notify-box fade-in">
+      <h2>MirrorMirror Is Coming</h2>
+      <p>
+        MirrorMirror 전체 라인업의 출시 소식과 
+        얼리 액세스 할인을 받아보세요.
+      </p>
+      <form class="notify-form" onsubmit="handleNotify(event)">
+        <input type="email" class="notify-input" placeholder="you@example.com" required>
+        <button type="submit" class="btn btn-primary">Notify Me</button>
+      </form>
+      <p class="newsletter-note">
+        스팸은 보내지 않습니다.
+        <a href="https://letter.rkttu.com" target="_blank">/dev/write 뉴스레터</a>를 통해 발송됩니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <div class="container">
+    <div class="footer-left">
+      © 2025 <a href="https://rkttu.com">rkttu.com</a> · Built by
+      <a href="https://github.com/rkttu">Jung Hyun, Ryu</a>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/rkttu/HandMirrorMcp">GitHub</a>
+      <a href="https://www.nuget.org/packages/HandMirrorMcp">NuGet</a>
+      <a href="https://letter.rkttu.com">/dev/write</a>
+      <a href="https://forum.dotnetdev.kr">Forum</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Copy command
+  function copyCmd(el, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      el.classList.add('copied');
+      el.querySelector('.copy-hint').textContent = 'copied!';
+      setTimeout(() => {
+        el.classList.remove('copied');
+        el.querySelector('.copy-hint').textContent = 'click to copy';
+      }, 2000);
+    });
+  }
+
+  // Newsletter form (placeholder — connect to actual service)
+  function handleNotify(e) {
+    e.preventDefault();
+    const input = e.target.querySelector('input');
+    const btn = e.target.querySelector('button');
+    btn.textContent = 'Subscribed ✓';
+    btn.style.background = 'var(--green-soft)';
+    input.disabled = true;
+    btn.disabled = true;
+    // TODO: Connect to /dev/write newsletter API or Lemon Squeezy email
+  }
+</script>
+
+</body>
+</html>
