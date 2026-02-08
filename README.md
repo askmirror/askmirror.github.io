@@ -92,7 +92,7 @@ docs/
 - 🌐 Website: [askmirror.net](https://askmirror.net)
 - 📦 HandMirrorMcp NuGet: [nuget.org/packages/HandMirrorMcp](https://www.nuget.org/packages/HandMirrorMcp)
 - 🔗 HandMirrorMcp GitHub: [github.com/rkttu/HandMirrorMcp](https://github.com/rkttu/HandMirrorMcp)
-- 📰 Newsletter: [/dev/write](https://letter.rkttu.com)
+- 📰 Newsletter: [/dev/write](https://devwrite.ai)
 - 💬 Forum: [forum.dotnetdev.kr](https://forum.dotnetdev.kr)
 
 ---
